@@ -144,6 +144,19 @@ func (g *Grid) SetMinSize(row, column int) *Grid {
 	return g
 }
 
+// SetRowHeight changes the height of the row just as if it were specified
+// that way in the first place by SetRows() or other similar methods
+func (g *Grid) SetRowHeight(row int, height int) *Grid {
+	if height < 0 {
+		panic("Invalid row height")
+	}
+	for row >= len(g.rows) {
+		g.rows = append(g.rows, 0)
+	}
+	g.rows[row] = height
+	return g
+}
+
 // SetGap sets the size of the gaps between neighboring primitives on the grid.
 // If borders are drawn (see SetBorders()), these values are ignored and a gap
 // of 1 is assumed. Panics if negative values are provided.
