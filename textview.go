@@ -152,6 +152,9 @@ type TextView struct {
 	// highlight(s) into the visible screen.
 	scrollToHighlights bool
 
+	// Whether tracking behaviour is employed
+	tracking bool
+
 	// An optional function which is called when the content of the text view has
 	// changed.
 	changed func()
@@ -172,6 +175,7 @@ func NewTextView() *TextView {
 		wrap:          true,
 		textColor:     Styles.PrimaryTextColor,
 		dynamicColors: false,
+		tracking:      true,
 	}
 }
 
@@ -269,6 +273,13 @@ func (t *TextView) SetChangedFunc(handler func()) *TextView {
 func (t *TextView) SetDoneFunc(handler func(key tcell.Key)) *TextView {
 	t.done = handler
 	return t
+}
+
+// SetTrackingBehaviour controls whether scroll-tracking is employed
+// (that is, whether appends while scrolled down all the way cause the scroll
+// to follow the new content)
+func (t *TextView) SetTrackingBehaviour(tracking bool) {
+	t.tracking = tracking
 }
 
 // ScrollTo scrolls to the specified row and column (both starting with 0).
@@ -691,7 +702,14 @@ func (t *TextView) Draw(screen tcell.Screen) {
 		t.trackEnd = true
 	}
 	if t.trackEnd {
-		t.lineOffset = len(t.index) - height
+		if t.tracking {
+			t.lineOffset = len(t.index) - height
+		} else {
+			// At least make sure we don't exceed the end
+			if t.lineOffset+height > len(t.index) {
+				t.lineOffset = len(t.index) - height
+			}
+		}
 	}
 	if t.lineOffset < 0 {
 		t.lineOffset = 0
