@@ -46,8 +46,24 @@ type Application struct {
 }
 
 // NewApplication creates and returns a new application.
+// Returns nil if an application can't be started (tcell can't make a screen)
 func NewApplication() *Application {
-	return &Application{}
+	a := &Application{}
+
+	var err error
+
+	// Make a screen.
+	a.screen, err = tcell.NewScreen()
+	if err != nil {
+		return nil
+	}
+	if err = a.screen.Init(); err != nil {
+		// Supposedly if Init() fails, we don't need to Fini().
+		// I guess that's reasonable.
+		return nil
+	}
+
+	return a
 }
 
 // SetInputCapture sets a function which captures all key events before they are
@@ -73,21 +89,8 @@ func (a *Application) GetInputCapture() func(event *tcell.EventKey) *tcell.Event
 // Run starts the application and thus the event loop. This function returns
 // when Stop() was called.
 func (a *Application) Run() error {
-	var err error
-	a.Lock()
 
-	// Make a screen.
-	a.screen, err = tcell.NewScreen()
-	if err != nil {
-		a.Unlock()
-		return err
-	}
-	if err = a.screen.Init(); err != nil {
-		a.Unlock()
-		return err
-	}
-
-	// We catch panics to clean up because they mess up the terminal.
+	//We catch panics to clean up because they mess up the terminal.
 	defer func() {
 		if p := recover(); p != nil {
 			if a.screen != nil {
@@ -98,7 +101,6 @@ func (a *Application) Run() error {
 	}()
 
 	// Draw the screen for the first time.
-	a.Unlock()
 	a.Draw()
 
 	// Start event loop.
