@@ -1,6 +1,6 @@
 package tview
 
-import "github.com/gdamore/tcell"
+import "github.com/ngrok/tcell"
 
 // Styles defines various colors used when primitives are initialized. These
 // may be changed to accommodate a different look and feel.

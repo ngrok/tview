@@ -6,7 +6,7 @@ import (
 	"strings"
 	"unicode/utf8"
 
-	"github.com/gdamore/tcell"
+	"github.com/ngrok/tcell"
 	runewidth "github.com/mattn/go-runewidth"
 )
 

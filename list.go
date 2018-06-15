@@ -3,7 +3,7 @@ package tview
 import (
 	"fmt"
 
-	"github.com/gdamore/tcell"
+	"github.com/ngrok/tcell"
 )
 
 // listItem represents one item in a List.

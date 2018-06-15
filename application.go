@@ -5,7 +5,7 @@ import (
 	"os"
 	"sync"
 
-	"github.com/gdamore/tcell"
+	"github.com/ngrok/tcell"
 )
 
 // Application represents the top node of an application.
