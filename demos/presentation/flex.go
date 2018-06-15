@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/gdamore/tcell"
-	"github.com/rivo/tview"
+	"github.com/ngrok/tcell"
+	"github.com/ngrok/tview"
 )
 
 // Flex demonstrates flexbox layout.

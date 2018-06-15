@@ -1,7 +1,7 @@
 // Demo code for the Box primitive.
 package main
 
-import "github.com/rivo/tview"
+import "github.com/ngrok/tview"
 
 func main() {
 	box := tview.NewBox().

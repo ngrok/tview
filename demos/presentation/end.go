@@ -3,8 +3,8 @@ package main
 import (
 	"fmt"
 
-	"github.com/gdamore/tcell"
-	"github.com/rivo/tview"
+	"github.com/ngrok/tcell"
+	"github.com/ngrok/tview"
 )
 
 // End shows the final slide.
