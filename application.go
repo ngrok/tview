@@ -33,6 +33,9 @@ type Application struct {
 	// be forwarded).
 	inputCapture func(event *tcell.EventKey) *tcell.EventKey
 
+	// An optional function which is invoked just before the screen resizes.
+	beforeResize func()
+
 	// An optional callback function which is invoked just before the root
 	// primitive is drawn.
 	beforeDraw func(screen tcell.Screen) bool
@@ -68,6 +71,18 @@ func (a *Application) SetInputCapture(capture func(event *tcell.EventKey) *tcell
 // if no such function has been installed.
 func (a *Application) GetInputCapture() func(event *tcell.EventKey) *tcell.EventKey {
 	return a.inputCapture
+}
+
+// SetBeforeResize sets a function which is called before screen resizing
+func (a *Application) SetBeforeResize(beforeResize func()) *Application {
+	a.beforeResize = beforeResize
+	return a
+}
+
+// GetBeforeResize returns the function installed with SetBeforeResize() or nil
+// if no such function has been installed.
+func (a *Application) GetBeforeResize() func() {
+	return a.beforeResize
 }
 
 // Run starts the application and thus the event loop. This function returns
@@ -160,7 +175,11 @@ func (a *Application) Run() error {
 		case *tcell.EventResize:
 			a.Lock()
 			screen := a.screen
+			resize := a.beforeResize
 			a.Unlock()
+			if resize != nil {
+				resize()
+			}
 			screen.Clear()
 			a.Draw()
 		}
